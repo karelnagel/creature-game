@@ -2,8 +2,8 @@ pragma solidity ^0.5.0;
 
 import "./ERC721Full.sol";
 
-contract MemoryToken is ERC721Full {
-    constructor() public ERC721Full("Memory Token", "MEMORY") {}
+contract CreatureToken is ERC721Full {
+    constructor() public ERC721Full("Creature Token", "CREATURE") {}
 
     function mint(address _to, string memory _tokenURI) public returns (bool) {
       uint _tokenId = totalSupply().add(1);

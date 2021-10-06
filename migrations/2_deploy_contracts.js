@@ -1,5 +1,5 @@
-const MemoryToken = artifacts.require("MemoryToken");
+const CreatureToken = artifacts.require("CreatureToken");
 
 module.exports = function(deployer) {
-  deployer.deploy(MemoryToken);
+  deployer.deploy(CreatureToken);
 };

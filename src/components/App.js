@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Web3 from 'web3'
 import './App.css';
-import MemoryToken from '../abis/MemoryToken.json'
+import CreatureToken from '../abis/CreatureToken.json'
 import brain from '../brain.png'
 
 const CARD_ARRAY = [
@@ -83,9 +83,9 @@ class App extends Component {
 
     // Load smart contract
     const networkId = await web3.eth.net.getId()
-    const networkData = MemoryToken.networks[networkId]
+    const networkData = CreatureToken.networks[networkId]
     if (networkData) {
-      const abi = MemoryToken.abi
+      const abi = CreatureToken.abi
       const address = networkData.address
       const token = new web3.eth.Contract(abi, address)
       this.setState({ token })
@@ -187,7 +187,7 @@ class App extends Component {
             rel="noopener noreferrer"
           >
             <img src={brain} width="30" height="30" className="d-inline-block align-top" alt="" />
-            &nbsp; Memory Tokens
+            &nbsp; Creature Tokens
           </a>
           <ul className="navbar-nav px-3">
             <li className="nav-item text-nowrap d-none d-sm-none d-sm-block">
