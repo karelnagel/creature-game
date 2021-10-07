@@ -25,7 +25,7 @@ contract('Creature Token', ([account, investor]) => {
 
     it('has uri', async () => {
       result = await token.uri(0)
-      assert.equal(result, "https://game.example/api/item/{id}.json")
+      assert.equal(result, "http://localhost:3000/json/{id}.json")
     })
     it('has deployer', async () => {
       result = await token.deployer()
@@ -62,7 +62,7 @@ contract('Creature Token', ([account, investor]) => {
   })
 
   describe('Deployer functions', async () => {
-    
+
     it('Change max balance ', async () => {
       await token.setMaxBalance(69, { from: investor }).should.be.rejected
       await token.setMaxBalance(77)
@@ -73,9 +73,53 @@ contract('Creature Token', ([account, investor]) => {
 
     it('Change base uri ', async () => {
       await token.setBaseUri("asdfasdfasdfasdf", { from: investor }).should.be.rejected
-      await token.setBaseUri("asd")
+      await token.setBaseUri("http://localhost:3000/json/")
       result = await token.uri(0)
-      assert.equal(result.toString(), 'asd')
+      assert.equal(result.toString(), 'http://localhost:3000/json/')
     })
   })
+
+  describe('Leave review', async () => {
+
+    it('review ', async () => {
+      await token.leaveReview("asdasd", { from: investor }).should.be.rejected
+      await token.leaveReview("Hello").should.be.fulfilled
+
+      await token.leaveReview("Helloasdf").should.be.rejected
+
+      result = await token.reviews(0)
+      assert.equal(result.toString(), "Hello")
+
+      result = await token.reviewCount()
+      assert.equal(result.toString(), '1')
+    })
+  })
+
+  describe('Burn tokens', async () => {
+
+    it('burn ', async () => {
+      let maxBalance = await token.maxBalance()
+      let ids=[]
+      let values=[]
+      for (let i = 1; i <= maxBalance; i++) {
+       let balance = await token.balanceOf(account, i)
+       if (balance >0){
+         ids.push(i)
+         values.push(balance)
+       }
+      }
+
+      //Act
+      await token.burnBatch(account,ids,values,{from:account})
+
+      //Assert
+      for (let i = 1; i <= maxBalance+1; i++) {
+        result = await token.balanceOf(account, i)
+        assert.equal(result.toString(), '0')
+      }
+      result = await token.balanceOf(account, 0)
+      assert.equal(result.toString(), '1')
+    })
+  })
+
 })
