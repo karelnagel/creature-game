@@ -33,7 +33,7 @@ class App extends Component {
 
     // Load smart contract
     const networkId = await web3.eth.net.getId()
-    const networkData = CreatureToken.networks[networkId]
+    let networkData = CreatureToken.networks[networkId]
     if (networkData) {
       const abi = CreatureToken.abi
       const address = networkData.address

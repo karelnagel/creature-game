@@ -1,7 +1,7 @@
 require('babel-register');
 require('babel-polyfill');
-const HDWalletProvider = require("@truffle/hdwallet-provider")
-require('dotenv').config(); // Load .env file
+const { projectId, mnemonic } = require('./secrets.json');
+const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 module.exports = {
   networks: {
@@ -11,8 +11,7 @@ module.exports = {
       network_id: "*" // Match any network id
     },
     matic: {
-      provider: () => new HDWalletProvider(process.env.MNEMONIC, 
-      `https://rpc-mumbai.matic.today`),
+      provider: () => new HDWalletProvider(mnemonic, `https://polygon-mumbai.infura.io/v3/${projectId}`),
       network_id: 80001,
       confirmations: 2,
       timeoutBlocks: 200,
@@ -20,6 +19,24 @@ module.exports = {
       gas: 6000000,
       gasPrice: 10000000000,
     },
+    ropsten: {
+      provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/${projectId}`),
+      network_id: 3,
+      gas: 5500000,
+      confirmations: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true
+    },
+    goerli: {
+      provider: () => new HDWalletProvider(mnemonic, `https://goerli.infura.io/v3/${projectId}`),
+      network_id: '5',
+      gas: 4465030,
+      gasPrice: 10000000000,
+      confirmations: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true
+    },
+    
 
   },
   contracts_directory: './src/contracts/',

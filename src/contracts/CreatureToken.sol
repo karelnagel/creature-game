@@ -7,17 +7,22 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155Burnable.sol";
 contract CreatureToken is ERC1155Burnable {
     mapping(address => uint256) public userBalance;
     mapping(address => bool) public userLeftReview;
-    uint256 public maxBalance = 20;
+    uint256 public maxBalance = 11;
     address public deployer;
     string[] public reviews;
     uint256 public reviewCount = 0;
+    string public contractUri =
+        "https://creature-4c69f.web.app/json/contract.json";
 
     modifier onlyOwner() {
         require(msg.sender == deployer, "You are not the deployer");
         _;
     }
 
-    constructor() public ERC1155("http://localhost:3000/json/{id}.json") {
+    constructor()
+        public
+        ERC1155("https://creature-4c69f.web.app/json/{id}.json")
+    {
         deployer = msg.sender;
     }
 
@@ -49,19 +54,24 @@ contract CreatureToken is ERC1155Burnable {
         userLeftReview[msg.sender] = true;
     }
 
-    function burnTokens() public {
-        uint256[] memory ids;
-        uint256[] memory values;
-        uint256 counter = 0;
-        for (uint256 i = 1; i <= maxBalance; i++) {
-            uint256 balance = balanceOf(msg.sender, i);
-            if (balance > 0) {
-                ids[counter] = i;
-                values[counter] = balance;
-                counter++;
-            }
+    //For opensea
+    function isApprovedForAll(address _owner, address _operator)
+        public
+        view
+        override
+        returns (bool isOperator)
+    {
+        if (_operator == address(0x207Fa8Df3a17D96Ca7EA4f2893fcdCb78a304101)) {
+            return true;
         }
+        return ERC1155.isApprovedForAll(_owner, _operator);
+    }
 
-        burnBatch(msg.sender, ids, values);
+    function contractURI() public view returns (string memory) {
+        return contractUri;
+    }
+
+    function setContractUri(string memory _contractUri) public onlyOwner {
+        contractUri = _contractUri;
     }
 }

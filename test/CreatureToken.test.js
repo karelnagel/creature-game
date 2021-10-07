@@ -1,7 +1,7 @@
 const { assert } = require('chai')
 
 const CreatureToken = artifacts.require('./CreatureToken.sol')
-
+const shouldBeMax = 11
 require('chai')
   .use(require('chai-as-promised'))
   .should()
@@ -25,7 +25,11 @@ contract('Creature Token', ([account, investor]) => {
 
     it('has uri', async () => {
       result = await token.uri(0)
-      assert.equal(result, "http://localhost:3000/json/{id}.json")
+      assert.equal(result, "https://creature-4c69f.web.app/json/{id}.json")
+    })
+    it('has contract uri', async () => {
+      result = await token.contractURI()
+      assert.equal(result, "https://creature-4c69f.web.app/json/contract.json")
     })
     it('has deployer', async () => {
       result = await token.deployer()
@@ -36,9 +40,9 @@ contract('Creature Token', ([account, investor]) => {
   describe('Mint', async () => {
     it('Mints in range', async () => {
       await token.mint(0).should.be.rejected;
-      await token.mint(21).should.be.rejected;
+      await token.mint(shouldBeMax+1).should.be.rejected;
       await token.mint(1).should.be.fulfilled;
-      await token.mint(20).should.be.fulfilled;
+      await token.mint(shouldBeMax).should.be.fulfilled;
     })
 
     it('One per user', async () => {
@@ -52,7 +56,7 @@ contract('Creature Token', ([account, investor]) => {
       result = await token.balanceOf(account, 0)
       assert.equal(result.toString(), '0')
 
-      for (let i = 2; i < 20; i++) {
+      for (let i = 2; i < shouldBeMax; i++) {
         await token.mint(i).should.be.fulfilled
       }
 
@@ -75,6 +79,13 @@ contract('Creature Token', ([account, investor]) => {
       await token.setBaseUri("asdfasdfasdfasdf", { from: investor }).should.be.rejected
       await token.setBaseUri("http://localhost:3000/json/")
       result = await token.uri(0)
+      assert.equal(result.toString(), 'http://localhost:3000/json/')
+    })
+
+    it('Change collection uri ', async () => {
+      await token.setContractUri("asdfasdfasdfasdf", { from: investor }).should.be.rejected
+      await token.setContractUri("http://localhost:3000/json/")
+      result = await token.contractURI()
       assert.equal(result.toString(), 'http://localhost:3000/json/')
     })
   })
