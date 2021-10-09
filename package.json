@@ -4,6 +4,7 @@
   "description": "Creature game",
   "author": "nagelkarel@gmail.com",
   "dependencies": {
+    "@fontsource/roboto": "^4.5.1",
     "axios": "^0.22.0",
     "babel-polyfill": "6.26.0",
     "babel-preset-env": "1.7.0",
