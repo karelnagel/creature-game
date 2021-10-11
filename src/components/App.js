@@ -12,16 +12,15 @@ import Helpers from './helpers'
 
 class App extends Component {
   //helpers = new Helpers('0x89', 'https://polygon-rpc.com');
-  helpers = new Helpers('0x5','https://goerli.prylabs.net')
+  helpers = new Helpers('0x5', 'https://goerli.prylabs.net')
 
   async componentWillMount() {
     await this.helpers.loadWeb3()
     var token = await this.helpers.getToken(CreatureToken)
-    if (token)
-      await this.loadBlockchainData(token)
-    else
-      window.alert('You are using wrong chain')
+    if (token) await this.loadBlockchainData(token)
+
     if (!this.state.finished) await this.getRandomToken()
+
     this.setState({ loading: false })
   }
 
@@ -47,7 +46,7 @@ class App extends Component {
     let showStart = true
     let finished = false
     let canReview = false
-    let account,ens
+    let account, ens
 
     if (this.state.playWithMinting) {
       [account, ens] = await this.helpers.getAddressAndEns();

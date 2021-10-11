@@ -39,6 +39,8 @@ class Helpers {
             const tokenAddress = networkData.address
             return new web3.eth.Contract(abi, tokenAddress)
         }
+        else
+            window.alert('You are using wrong chain')
     }
 
     async connectToPreferredNetwork() {

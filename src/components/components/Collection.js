@@ -8,11 +8,10 @@ class Collection extends Component {
         {this.props.tokensOwned.map((tokenId) => {
           let info = this.props.tokens.find((token) => token.id === tokenId)
           return (
-            <a href={`https://twitter.com/${info.name}`}>
+            <a href={`https://twitter.com/${info.name}`} key={tokenId}>
               <img
                 width="50"
                 alt=''
-                key={tokenId}
                 src={info.image}
               />
               <p>{info.name}</p>
