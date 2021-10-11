@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Web3 from 'web3'
 import './App.css';
 import CreatureToken from '../abis/CreatureToken.json'
 import axios from 'axios';
@@ -8,85 +7,65 @@ import Finished from './components/Finished';
 import Collection from './components/Collection';
 import Reviews from './components/Reviews';
 import Nav from './components/Nav';
-import Start from './components/Start';
+import Start from './components/Start'
+import Helpers from './helpers'
 
 class App extends Component {
+  //helpers = new Helpers('0x89', 'https://polygon-rpc.com');
+  helpers = new Helpers('0x5','https://goerli.prylabs.net')
 
   async componentWillMount() {
-    await this.loadWeb3()
-    await this.loadBlockchainData()
+    await this.helpers.loadWeb3()
+    var token = await this.helpers.getToken(CreatureToken)
+    if (token)
+      await this.loadBlockchainData(token)
+    else
+      window.alert('You are using wrong chain')
     if (!this.state.finished) await this.getRandomToken()
     this.setState({ loading: false })
   }
-  async loadWeb3() {
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum)
-      await window.ethereum.enable()
+
+  async loadBlockchainData(token) {
+    const maxBalance = await token.methods.maxBalance().call()
+
+    //For everyone
+    let tokens = []
+    for (let i = 1; i <= maxBalance; i++) {
+      let response = await axios.get(`json/${i}.json`)
+      tokens.push({ id: i.toString(), name: response.data.name, image: response.data.image })
     }
-    else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider)
+    console.log(tokens)
+    let reviews = [];
+    let reviewCount = await token.methods.reviewCount().call()
+    for (let i = 0; i < reviewCount; i++) {
+      let review = await token.methods.reviews(i).call()
+      reviews.push(review)
     }
-    else {
-      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
-    }
-  }
 
-  async loadBlockchainData() {
-    const web3 = window.web3
-    const networkId = await web3.eth.net.getId()
-    let networkData = CreatureToken.networks[networkId]
+    //For only those in correct eth network
+    let tokensOwned = []
+    let showStart = true
+    let finished = false
+    let canReview = false
+    let account,ens
 
-    //If not in correct network then go to default network and turn playwithminting off
-    if (networkData) {
-      const abi = CreatureToken.abi
-      const tokenAddress = networkData.address
-      const token = new web3.eth.Contract(abi, tokenAddress)
-      const maxBalance = await token.methods.maxBalance().call()
-   
+    if (this.state.playWithMinting) {
+      [account, ens] = await this.helpers.getAddressAndEns();
 
-
-      //For everyone
-      let tokens = []
       for (let i = 1; i <= maxBalance; i++) {
-        let response = await axios.get(`json/${i}.json`)
-        tokens.push({ id: i.toString(), name: response.data.name, image: response.data.image })
-      }
-      console.log(tokens)
-      let reviews = [];
-      let reviewCount = await token.methods.reviewCount().call()
-      for (let i = 0; i < reviewCount; i++) {
-        let review = await token.methods.reviews(i).call()
-        reviews.push(review)
-      }
-
-      //For only those in correct eth network
-      let tokensOwned = []
-      let showStart = true
-      let finished = false
-      let canReview = false
-      let account
-
-      if (this.state.playWithMinting) {
-      [account] = await web3.eth.getAccounts()
-        for (let i = 1; i <= maxBalance; i++) {
-          let result = await token.methods.balanceOf(account, i).call()
-          if (result.toString() === '1') {
-            tokensOwned.push(i.toString())
-          }
+        let result = await token.methods.balanceOf(account, i).call()
+        if (result.toString() === '1') {
+          tokensOwned.push(i.toString())
         }
-        if (tokensOwned.length > 0) showStart = false;
-        let finalToken = await token.methods.balanceOf(account, 0).call()
-        finished = finalToken.toString() === '1'
-
-        canReview = !await token.methods.userLeftReview(account).call()
       }
+      if (tokensOwned.length > 0) showStart = false;
+      let finalToken = await token.methods.balanceOf(account, 0).call()
+      finished = finalToken.toString() === '1'
 
-      this.setState({ tokensOwned, tokens, reviews, canReview, finished, account, token, maxBalance, showStart })
+      canReview = !await token.methods.userLeftReview(account).call()
+    }
 
-    }
-    else {
-      window.alert('Wrong network')
-    }
+    this.setState({ tokensOwned, tokens, reviews, canReview, finished, account, token, maxBalance, showStart, ens })
   }
 
   select = async (id) => {
@@ -190,8 +169,9 @@ class App extends Component {
     this.state = {
       loading: true,
       finished: false,
-      playWithMinting: false,
+      playWithMinting: true,
       account: '0x0',
+      ens: '',
       token: null,
       maxBalance: 0,
       tokensOwned: [],
@@ -210,10 +190,9 @@ class App extends Component {
     return (
       <main>
         <Nav
-          account={this.state.account}
+          account={this.state.ens ? this.state.ens : this.state.account}
           error={!this.state.playWithMinting}
         />
-
         <div className='top'>
           <div className="top-box">
             {!this.state.finished
@@ -228,7 +207,6 @@ class App extends Component {
                   select={this.select}
                 />
               :
-
               <Finished
                 canReview={this.state.canReview}
                 handleInputChanged={this.handleInputChanged}
