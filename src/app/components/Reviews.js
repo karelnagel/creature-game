@@ -10,7 +10,7 @@ class Reviews extends Component {
     var mySubString = review.substring(start + 1,end);
     return (
       <p key={i} className='p1'>
-        {i}.
+        {i+1}.
         {review.substring(0,start)}
         <a href={`https://twitter.com/${mySubString}`} target="_blank" rel="noopener noreferrer">{mySubString}</a>
         {review.substring(end,review.length)}

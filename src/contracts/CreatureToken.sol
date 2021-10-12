@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155Burnable.sol";
 contract CreatureToken is ERC1155Burnable {
     mapping(address => uint256) public userBalance;
     mapping(address => bool) public userLeftReview;
-    uint256 public maxBalance = 11;
+    uint256 public maxBalance = 85;
     address public deployer;
     string[] public reviews;
     uint256 public reviewCount = 0;

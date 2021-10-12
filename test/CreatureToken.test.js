@@ -1,7 +1,7 @@
 const { assert } = require('chai')
 
 const CreatureToken = artifacts.require('./CreatureToken.sol')
-const shouldBeMax = 11
+const shouldBeMax = 85
 require('chai')
   .use(require('chai-as-promised'))
   .should()
@@ -68,10 +68,13 @@ contract('Creature Token', ([account, investor]) => {
   describe('Deployer functions', async () => {
 
     it('Change max balance ', async () => {
-      await token.setMaxBalance(69, { from: investor }).should.be.rejected
-      await token.setMaxBalance(77)
+      await token.setMaxBalance(100, { from: investor }).should.be.rejected
+      await token.setMaxBalance(101)
       result = await token.maxBalance()
-      assert.equal(result.toString(), '77')
+      assert.equal(result.toString(), '101')
+      await token.setMaxBalance(shouldBeMax)
+      result = await token.maxBalance()
+      assert.equal(result.toString(), shouldBeMax.toString())
     })
 
 

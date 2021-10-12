@@ -1,7 +1,33 @@
 //node src/app/ToJson.js
 const fs = require('fs');
 
-let handles = ['afternoon_mate', 'bendetta666', 'crammereth', 'Damatosonian', 'Frankdebru', 'Greentoe_eth','jbe61','meangirl_eth','melissa_nft','RyanLeu89436753','Surfdomchaser']
+let handles = [
+    'idlebit',         's17a_xyz',        'bendetta666',     'Damatosonian',
+    'Jappaofficial4',  'xohiebeexc',      'PRAM0D_NAUTIYAL', 'AstrocatNFTs',
+    'Luca_Capo96',     'jbe61',           'vnctbm',          'mikejp__',
+    'YcryptoKa',       'alderaanshot1st', 'cookiesfortune_', 'ididitinshorts',
+    'Alpurrt',         'CryptOffChillen', 'LemonGft',        'POLLYN_ind',
+    'Willdem808',      'creature_cmfrt',  'eelcryptoe',      'Or_NFT07',
+    'ElFuser11',       'luvisnft',        'DMC_Yi',          'rudestamp',
+    'pinco0521',       'onionsforthree',  'kuru_pira',       'VDyl87',
+    'Smashe__',        'Frankdebru',      'GOATY78501212',   'anima_eth',
+    'BadBeaverCo',     'FPLAdmiral',      'RemixMTG',        'jp12method',
+    'TheDavidMurray',  'dijosong',        'melissa_nft',     'Manos_Diamante',
+    'Pgigi94',         'meangirl_eth',    'BdelloidRotifer', 'SecretariYat',
+    'nft_josh',        'kzolson19',       'Demon_mom666',    'jrcashhh',
+    'dripgtbz',        'NickSni43144906', 'WATERxBEAR',      'NN_NFT',
+    'bambo823',        'SmallDickHero',   'JGtaxCPA',        'BullishCat_',
+    'Crypt_O_Manimal', 'Creature_3241',   'kevincreatures',  'Key_Yeti',
+    'CryptoAnonymou7', 'brarjaskaran',    'kendude_',        'BigBawlaBoi',
+    'theboyalu',       'EmilianoConti1',  'GCButcher42',     'Jan_Hodls',
+    'swhoo_eth',       'pudgycreature',   'DigitalCardC',    'KCgillN',
+    'ekko1_',          'herd_ewe',        'nmbr2dad',        'karelETH',
+    'dannycoleee',     'SHAQ',            'PhatStraws',      'KidHastings',
+    'remixrfi'
+  ]
+
+
+
 let baseUrl = 'https://creature-4c69f.web.app/'
 let counter = 1
 
