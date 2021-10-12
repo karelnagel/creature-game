@@ -8,20 +8,25 @@ import Collection from './components/Collection';
 import Reviews from './components/Reviews';
 import Nav from './components/Nav';
 import Start from './components/Start'
-import Helpers from './helpers'
+import Loading from './components/Loading'
+import Helper from './components/Helper'
 
 class App extends Component {
-  //helpers = new Helpers('0x89', 'https://polygon-rpc.com');
-  helpers = new Helpers('0x5', 'https://goerli.prylabs.net')
+  //helper = new Helpers('0x89', 'https://polygon-rpc.com');
+  helper = new Helper('0x5', 'https://goerli.prylabs.net')
 
   async componentWillMount() {
-    await this.helpers.loadWeb3()
-    var token = await this.helpers.getToken(CreatureToken)
-    if (token) await this.loadBlockchainData(token)
+    await this.helper.loadWeb3()
+    var token = await this.helper.getToken(CreatureToken)
 
-    if (!this.state.finished) await this.getRandomToken()
+    this.setState({ token })
+    if (token) {
+      await this.loadBlockchainData(token)
 
-    this.setState({ loading: false })
+      if (!this.state.finished) await this.getRandomToken()
+
+      this.setState({ loading: false })
+    }
   }
 
   async loadBlockchainData(token) {
@@ -33,7 +38,6 @@ class App extends Component {
       let response = await axios.get(`json/${i}.json`)
       tokens.push({ id: i.toString(), name: response.data.name, image: response.data.image })
     }
-    console.log(tokens)
     let reviews = [];
     let reviewCount = await token.methods.reviewCount().call()
     for (let i = 0; i < reviewCount; i++) {
@@ -47,29 +51,31 @@ class App extends Component {
     let finished = false
     let canReview = false
     let account, ens
+    let playWithMinting = true;
 
-    if (this.state.playWithMinting) {
-      [account, ens] = await this.helpers.getAddressAndEns();
+    [account, ens] = await this.helper.getAddressAndEns();
 
-      for (let i = 1; i <= maxBalance; i++) {
-        let result = await token.methods.balanceOf(account, i).call()
-        if (result.toString() === '1') {
-          tokensOwned.push(i.toString())
-        }
+    for (let i = 1; i <= maxBalance; i++) {
+      let result = await token.methods.balanceOf(account, i).call()
+      if (result.toString() === '1') {
+        tokensOwned.push(i.toString())
       }
-      if (tokensOwned.length > 0) showStart = false;
-      let finalToken = await token.methods.balanceOf(account, 0).call()
-      finished = finalToken.toString() === '1'
-
-      canReview = !await token.methods.userLeftReview(account).call()
     }
+    if (tokensOwned.length > 0)
+      showStart = false;
+    let finalToken = await token.methods.balanceOf(account, 0).call()
+    finished = finalToken.toString() === '1'
 
-    this.setState({ tokensOwned, tokens, reviews, canReview, finished, account, token, maxBalance, showStart, ens })
+    canReview = !await token.methods.userLeftReview(account).call()
+    playWithMinting = await token.methods.active().call()
+
+    this.setState({ tokensOwned, tokens, reviews, canReview, finished, account, maxBalance, showStart, ens, playWithMinting })
   }
 
   select = async (id) => {
     if (this.state.currentToken.id === id) {
-      alert('Correct')
+      this.setState({ correctOrWrong: 'nav-correct' })
+      setTimeout(() => this.setState({ correctOrWrong: '' }), 500)
       if (this.state.playWithMinting)
         await this.mint(id)
       else {
@@ -83,7 +89,8 @@ class App extends Component {
       }
     }
     else {
-      alert("Wrong!")
+      this.setState({ correctOrWrong: 'nav-wrong' })
+      setTimeout(() => this.setState({ correctOrWrong: '' }), 500)
       this.getRandomToken()
     }
   }
@@ -103,9 +110,9 @@ class App extends Component {
       })
   }
 
-  async leaveReview() {
+  leaveReview = async () => {
     var text = this.state.reviewText;
-
+    console.log(this.state.tokensOwned)
     this.setState({ canReview: false })
     await this.state.token.methods.leaveReview(text)
       .send({ from: this.state.account })
@@ -115,7 +122,7 @@ class App extends Component {
       })
   }
 
-  handleInputChanged(event) {
+  handleInputChanged = (event) =>{
     this.setState({
       reviewText: event.target.value
     });
@@ -124,7 +131,6 @@ class App extends Component {
   getRandomToken() {
     // Getting twitter name 
     let notFoundTokens = []
-    console.log(this.state.tokens)
     this.state.tokens.forEach(element => {
       if (!this.state.tokensOwned.includes(element.id))
         notFoundTokens.push(element)
@@ -145,7 +151,7 @@ class App extends Component {
     return array.sort((a, b) => 0.5 - Math.random())
   }
 
-  async burn() {
+  burn=async()=> {
     let ids = []
     let values = []
     for (let i = 1; i <= this.state.maxBalance; i++) {
@@ -181,16 +187,18 @@ class App extends Component {
       canReview: true,
       reviewText: '',
       showStart: true,
+      correctOrWrong: '',
     }
   }
 
   render() {
-    if (this.state.loading) return (<div></div>);
+    if (this.state.loading) return (<Loading />);
     return (
       <main>
         <Nav
-          account={this.state.ens ? this.state.ens : this.state.account}
-          error={!this.state.playWithMinting}
+          account={this.state.account}
+          ens={this.state.ens}
+          correctOrWrong={this.state.correctOrWrong}
         />
         <div className='top'>
           <div className="top-box">
@@ -211,7 +219,7 @@ class App extends Component {
                 handleInputChanged={this.handleInputChanged}
                 leaveReview={this.leaveReview}
                 burn={this.burn}
-                canBurn={this.state.tokensOwned > 0}
+                canBurn={this.state.tokensOwned.length > 0}
               />
             }
           </div>
@@ -231,16 +239,16 @@ class App extends Component {
           </div>
         </div>
         <footer>
-          <a href="https://twitter.com/KarelETH">
+          <a href="https://twitter.com/KarelETH" target="_blank" rel="noopener noreferrer">
             <p>Opensea</p>
           </a>
-          <a href="https://twitter.com/KarelETH">
+          <a href="https://github.com/karelnagel/creature-game" target="_blank" rel="noopener noreferrer">
             <p>Github</p>
           </a>
-          <a href="https://twitter.com/KarelETH">
+          <a href="https://twitter.com/KarelETH" target="_blank" rel="noopener noreferrer">
             <p>Twitter</p>
           </a>
-          <a href="https://twitter.com/KarelETH">
+          <a href="https://twitter.com/KarelETH" target="_blank" rel="noopener noreferrer">
             <p>Contract</p>
           </a>
         </footer>

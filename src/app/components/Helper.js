@@ -2,10 +2,9 @@ import Web3 from 'web3'
 import { ethers } from "ethers";
 
 
-class Helpers {
+class Helper {
     chainId = '0x00';
     networkRpc = '';
-
 
     constructor(chainId, networkRpc) {
         this.chainId = chainId;
@@ -14,6 +13,7 @@ class Helpers {
 
     async loadWeb3() {
         if (window.ethereum) {
+            //Todo remove and change bottom to window.ethereum.Contract()
             window.web3 = new Web3(window.ethereum)
             await window.ethereum.request({
                 method: 'eth_requestAccounts',
@@ -26,7 +26,8 @@ class Helpers {
 
     async getToken(Token) {
         const web3 = window.web3
-        const networkId = await web3.eth.net.getId()
+        const networkId = await window.web3.eth.net.getId()
+
         var networkData = Token.networks[networkId]
 
         if (!networkData) {
@@ -44,7 +45,6 @@ class Helpers {
     }
 
     async connectToPreferredNetwork() {
-        console.log('tura', this.chainId)
         try {
             await window.ethereum.request({
                 method: 'wallet_switchEthereumChain',
@@ -58,16 +58,14 @@ class Helpers {
                         params: [{ chainId: this.chainId, rpcUrl: this.networkRpc }],
                     });
                 } catch (addError) {
-                    console.log('siin', addError)
                 }
             }
-            else
-                console.log('siin2', switchError)
+            
         }
     }
 
     async getAddressAndEns() {
-        const [account] = await window.web3.eth.getAccounts()
+        const [account] = await window.ethereum.request({ method: 'eth_accounts' });
         let ens = ''
 
         //Getting ENS
@@ -77,4 +75,4 @@ class Helpers {
         return [account, ens]
     }
 }
-export default Helpers;
+export default Helper;

@@ -11,6 +11,7 @@ contract CreatureToken is ERC1155Burnable {
     address public deployer;
     string[] public reviews;
     uint256 public reviewCount = 0;
+    bool public active=true;
     string public contractUri =
         "https://creature-4c69f.web.app/json/contract.json";
 
@@ -27,9 +28,9 @@ contract CreatureToken is ERC1155Burnable {
     }
 
     function mint(uint256 id) public {
+        require(active,'Minting is stopped right now');
         //check if id in range
         require(0 < id && id <= maxBalance, "Wrong token id");
-
         //check if user already has this id
         require(balanceOf(msg.sender, id) == 0, "You already have this token");
         _mint(msg.sender, id, 1, "");
@@ -74,4 +75,9 @@ contract CreatureToken is ERC1155Burnable {
     function setContractUri(string memory _contractUri) public onlyOwner {
         contractUri = _contractUri;
     }
+
+    function setActiveStatus(bool _active) public onlyOwner {
+        active = _active;
+    }
+    
 }

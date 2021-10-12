@@ -88,6 +88,12 @@ contract('Creature Token', ([account, investor]) => {
       result = await token.contractURI()
       assert.equal(result.toString(), 'http://localhost:3000/json/')
     })
+    it('Change active status ', async () => {
+      await token.setActiveStatus(false, { from: investor }).should.be.rejected
+      await token.setActiveStatus(false)
+      result = await token.active()
+      assert.equal(result.toString(), 'false')
+    })
   })
 
   describe('Leave review', async () => {

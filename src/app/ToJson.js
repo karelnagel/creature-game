@@ -1,4 +1,4 @@
-//node src/components/ToJson.js
+//node src/app/ToJson.js
 const fs = require('fs');
 
 let handles = ['afternoon_mate', 'bendetta666', 'crammereth', 'Damatosonian', 'Frankdebru', 'Greentoe_eth','jbe61','meangirl_eth','melissa_nft','RyanLeu89436753','Surfdomchaser']
@@ -21,7 +21,7 @@ handles.forEach((handle) => {
     writeObject(object, counter)
     counter++;
 })
-console.log(handles.length)
+console.log(counter-1)
 
 //Write special NFT
 let special = {
@@ -32,12 +32,14 @@ let special = {
 }
 writeObject(special, '0')
 
-//Write collection
+//Write contract
 let contract = {
     name: 'Creature game',
     description: `Find all creatures to get one special token.\nMade by http://twitter.com/KarelETH \nGo play ${baseUrl}`,
     external_link: baseUrl,
-    image: `${baseUrl}images/collection.jpg`,
+    image: `${baseUrl}images/0.jpg`,
+    banner_image: `${baseUrl}images/contract_banner.jpg`,
+    banner: `${baseUrl}images/contract_banner.jpg`,
     seller_fee_basis_points: 7500,
     fee_recipient: '0x3A823E158083e186ECfD61370d1a62D6C02F8D21'
 }

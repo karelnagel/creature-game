@@ -10,16 +10,19 @@ class Finished extends Component {
           {(this.props.canReview || this.props.canBurn) &&
             <div>
               {this.props.canReview &&
-                <form>
-                  <input type="text" placeholder='Add your message to the Wall of Fame' onChange={this.props.handleInputChanged.bind(this)} />
+                <div>
+                  <p className='p1'>Add your message to the Wall of Fame. You can leave only one message and it can't be changed. To mention your twitter user put @ before your username.</p>
+                  <input type="text" placeholder='I really liked the game @KarelETH' onChange={this.props.handleInputChanged.bind(this)} />
                   <button className='btn' onClick={this.props.leaveReview.bind(this)}>
-                    Submit
+                    Add
                   </button>
-                </form>
+                </div>
               }
               {this.props.canBurn &&
-                <div>
-                  <p>If you don’t want to see all the 90 useless tokens in your opensea wallet and keep only the last one then press ‘burn’</p>
+                <div className='finished-burn'>
+                  <p className='p1'>
+                    You can burn all the collected Creature tokens, to free your wallet, but the Tomato NFT will still stay in your wallet.
+                    </p>
                   <button className='btn' onClick={this.props.burn.bind(this)}>Burn</button>
                 </div>
               }

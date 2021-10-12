@@ -20,7 +20,7 @@ main {
 
 main {
   height: 100vh;
-  background: linear-gradient(110.52deg, #0c4e73 0%, #c580a5 100%);
+  background: linear-gradient(110.52deg, #202764 0%, #9e3737 99.02%);
   position: relative;
 }
 a {
@@ -37,12 +37,25 @@ a {
   padding: 10px 20px;
   text-transform: uppercase;
   color: white;
+  max-height: 50px;
+  cursor: pointer;
 }
+
 /* NAV */
 .nav-bar {
   position: fixed;
   top: 0;
   width: 100%;
+  -moz-transition: all 0.3s ease-in;
+  -o-transition: all 0.3s ease-in;
+  -webkit-transition: all 0.3s ease-in;
+  transition: all 0.3s ease-in;
+}
+.nav-correct {
+  background-color: green;
+}
+.nav-wrong {
+  background-color: red;
 }
 nav {
   background-color: var(--color-nav);
@@ -64,7 +77,6 @@ nav div {
   height: 30px;
   padding: auto;
 }
-
 
 /* TOP */
 .top {
@@ -112,6 +124,9 @@ footer a {
 }
 
 /* GAME */
+.game a {
+  color: #3ea2ea;
+}
 .game-pictures {
   display: flex;
   justify-content: space-around;
@@ -129,17 +144,24 @@ footer a {
   width: auto;
   flex-wrap: wrap;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: flex-start;
+}
+.collection a {
+  width: 70px;
+  padding: 0;
+  margin: 0px 6px 10px 7px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .collection img {
-  width: 70px;
-  margin: 0 10px;
   height: 70px;
+  width: 70px;
   border-radius: 35px;
 }
 .collection p {
+  margin: 0;
   width: 70px;
-  text-overflow: clip;
 }
 
 /* FINISHED */
@@ -152,10 +174,25 @@ footer a {
   width: 180px;
   border-radius: 30px;
 }
+.finished input {
+  width: 60%;
+  background-color: var(--color-nav);
+  padding: 10px;
+  border: none;
+  color: var(--color-black);
+  margin: 10px 10px;
+  border-radius: 10px;
+}
+.finished p {
+  margin: 20px 40px;
+}
 
 /* REVIEWS */
 .reviews-text {
   text-align: left;
+}
+.reviews-text a {
+  color: #3ea2ea;
 }
 
 /* FONTS */
@@ -174,8 +211,8 @@ h3 {
   font-size: 24px;
   line-height: 50px;
 }
-p {
+.p1 {
   font-weight: 500;
   font-size: 24px;
-  line-height: 50px;
+  line-height: 35px;
 }
