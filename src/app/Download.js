@@ -67,8 +67,8 @@ creatures.forEach((creature, i) => {
 })
 var ncp = require('ncp').ncp;
  
- 
-ncp('public/images', 'src/app/images', function (err) {
+const srcImgFolder = 'src/app/images'
+ncp('public/images', srcImgFolder, function (err) {
  if (err) {
    return console.error(err);
  }

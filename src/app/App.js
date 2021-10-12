@@ -33,12 +33,11 @@ class App extends Component {
     const maxBalance = await token.methods.maxBalance().call()
 
     //For everyone
-    let tokens = []
     var tokensJson = require(`./tokens.json`)
-    for (let i = 1; i <= maxBalance; i++) {
-      let response = tokensJson[i-1]
-      tokens.push({ id: i.toString(), name: response.name, image: response.image })
-    }
+    const tokens =tokensJson.map((token,i)=>{
+      return {id:(i+1).toString(), name:token.name}
+    })
+    console.log(tokens)
     let reviews = [];
     let reviewCount = await token.methods.reviewCount().call()
     for (let i = 0; i < reviewCount; i++) {
