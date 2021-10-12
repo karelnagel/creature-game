@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
 import CreatureToken from '../abis/CreatureToken.json'
-import axios from 'axios';
 import Game from './components/Game';
 import Finished from './components/Finished';
 import Collection from './components/Collection';
@@ -10,6 +9,7 @@ import Nav from './components/Nav';
 import Start from './components/Start'
 import Loading from './components/Loading'
 import Helper from './components/Helper'
+
 
 class App extends Component {
   //helper = new Helpers('0x89', 'https://polygon-rpc.com');
@@ -34,9 +34,10 @@ class App extends Component {
 
     //For everyone
     let tokens = []
+    var tokensJson = require(`./tokens.json`)
     for (let i = 1; i <= maxBalance; i++) {
-      let response = await axios.get(`json/${i}.json`)
-      tokens.push({ id: i.toString(), name: response.data.name, image: response.data.image })
+      let response = tokensJson[i-1]
+      tokens.push({ id: i.toString(), name: response.name, image: response.image })
     }
     let reviews = [];
     let reviewCount = await token.methods.reviewCount().call()

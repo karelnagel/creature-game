@@ -11,7 +11,7 @@ class Game extends Component {
 
         <div className='game-pictures'>
           {this.props.currentPictures.map((picture) => {
-            return (<img width='100' src={picture.image} alt='' onClick={() => this.props.select(picture.id)} key={picture.id} />)
+            return (<img width='100' src={require(`../images/${picture.name}.jpg`)} alt='' onClick={() => this.props.select(picture.id)} key={picture.id} />)
           })}
         </div>
       </section>

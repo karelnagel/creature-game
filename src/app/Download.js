@@ -47,26 +47,7 @@ var creatures = [
     ['KidHastings', 4392],
     ['remixrfi', 9667],
 ]
-let namesArray = creatures.map((creature) => creature[0])
-console.log(namesArray)
-function eliminateDuplicates(arr) {
-    var i,
-        len = arr.length,
-        out = [],
-        obj = {};
-  
-    for (i = 0; i < len; i++) {
-      obj[arr[i]] = 0;
-    }
-    for (i in obj) {
-      out.push(i);
-    }
-    return out;
-  }
-  
-  console.log(eliminateDuplicates(namesArray))
 creatures.forEach((creature, i) => {
-    console.log(i)
     let name = creature[0]
     let id = creature[1]
     let path = `public/images/${name}.jpg`
@@ -84,3 +65,83 @@ creatures.forEach((creature, i) => {
         });
     }
 })
+var ncp = require('ncp').ncp;
+ 
+ 
+ncp('public/images', 'src/app/images', function (err) {
+ if (err) {
+   return console.error(err);
+ }
+ console.log('done!');
+});
+
+
+function eliminateDuplicates(arr) {
+    var i,
+        len = arr.length,
+        out = [],
+        obj = {};
+  
+    for (i = 0; i < len; i++) {
+      obj[arr[i]] = 0;
+    }
+    for (i in obj) {
+      out.push(i);
+    }
+    return out;
+  }
+  
+ var handles = eliminateDuplicates(creatures.map((creature) => creature[0]))
+
+//Creating json
+
+
+let baseUrl = 'https://creature-game.web.app/'
+let counter = 1
+
+function writeObject(object, file) {
+    let data = JSON.stringify(object);
+    fs.writeFileSync(`public/json/${file}.json`, data);
+}
+
+//Write all NFTs 
+var allObjects=[]
+handles.forEach((handle) => {
+    let object = {
+        name: handle,
+        description: `Go follow http://twitter.com/${handle}`,
+        image: `${baseUrl}images/${handle}.jpg`,
+        external_url: baseUrl
+    }
+    allObjects.push(object)
+    writeObject(object, counter)
+    counter++;
+})
+console.log(counter-1)
+
+//Writing one big json file for app
+let data = JSON.stringify(allObjects);
+fs.writeFileSync(`src/app/tokens.json`, data);
+
+
+//Write special NFT
+let special = {
+    name: 'Special NFT',
+    description: 'This is the one you want to hold',
+    image: `${baseUrl}images/0.jpg`,
+    external_url: baseUrl
+}
+writeObject(special, '0')
+
+//Write contract
+let contract = {
+    name: 'Creature game',
+    description: `Find all creatures to get one special token.\nMade by http://twitter.com/KarelETH \nGo play ${baseUrl}`,
+    external_link: baseUrl,
+    image: `${baseUrl}images/0.jpg`,
+    banner_image: `${baseUrl}images/contract_banner.jpg`,
+    banner: `${baseUrl}images/contract_banner.jpg`,
+    seller_fee_basis_points: 7500,
+    fee_recipient: '0x3A823E158083e186ECfD61370d1a62D6C02F8D21'
+}
+writeObject(contract, 'contract')

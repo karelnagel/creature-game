@@ -13,7 +13,7 @@ class Collection extends Component {
                 <img
                   width="50"
                   alt=''
-                  src={info.image}
+                  src={require(`../images/${info.name}.jpg`)}
                 />
                 <p>{info.name}</p>
               </a>

@@ -6,7 +6,7 @@ class Finished extends Component {
       <section>
         <h2>Congratulations you collected them all!!!</h2>
         <div className="finished">
-          <img src="/images/0.jpg" alt="" />
+          <img src={require(`../images/0.jpg`)} alt="" />
           {(this.props.canReview || this.props.canBurn) &&
             <div>
               {this.props.canReview &&
