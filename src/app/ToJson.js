@@ -28,7 +28,7 @@ let handles = [
 
 
 
-let baseUrl = 'https://creature-4c69f.web.app/'
+let baseUrl = 'https://creature-game.web.app/'
 let counter = 1
 
 function writeObject(object, file) {

@@ -74,18 +74,23 @@ class App extends Component {
 
   select = async (id) => {
     if (this.state.currentToken.id === id) {
-      this.setState({ correctOrWrong: 'nav-correct' })
-      setTimeout(() => this.setState({ correctOrWrong: '' }), 500)
-      if (this.state.playWithMinting)
-        await this.mint(id)
-      else {
-        this.state.tokensOwned.push(id.toString())
+      if (!this.state.mintStarted.includes(id)) {
+        var mintStarted = this.state.mintStarted
+        mintStarted.push(id)
+        this.setState({ mintStarted })
+        this.setState({ correctOrWrong: 'nav-correct' })
+        setTimeout(() => this.setState({ correctOrWrong: '' }), 500)
+        if (this.state.playWithMinting)
+          await this.mint(id)
+        else {
+          this.state.tokensOwned.push(id.toString())
 
-        if (this.state.tokensOwned.length.toString() === this.state.maxBalance.toString()) {
-          this.setState({ finished: true })
+          if (this.state.tokensOwned.length.toString() === this.state.maxBalance.toString()) {
+            this.setState({ finished: true })
+          }
+          else
+            this.getRandomToken()
         }
-        else
-          this.getRandomToken()
       }
     }
     else {
@@ -95,6 +100,7 @@ class App extends Component {
     }
   }
   mint = async (id) => {
+
     await this.state.token.methods.mint(id)
       .send({ from: this.state.account })
       .on('transactionHash', (hash) => {
@@ -108,6 +114,7 @@ class App extends Component {
         else
           this.getRandomToken()
       })
+
   }
 
   leaveReview = async () => {
@@ -122,7 +129,7 @@ class App extends Component {
       })
   }
 
-  handleInputChanged = (event) =>{
+  handleInputChanged = (event) => {
     this.setState({
       reviewText: event.target.value
     });
@@ -151,7 +158,7 @@ class App extends Component {
     return array.sort((a, b) => 0.5 - Math.random())
   }
 
-  burn=async()=> {
+  burn = async () => {
     let ids = []
     let values = []
     for (let i = 1; i <= this.state.maxBalance; i++) {
@@ -180,6 +187,7 @@ class App extends Component {
       token: null,
       maxBalance: 0,
       tokensOwned: [],
+      mintStarted: [],
       tokens: [],
       currentToken: {},
       currentPictures: {},

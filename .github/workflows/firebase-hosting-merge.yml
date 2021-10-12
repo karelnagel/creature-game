@@ -17,4 +17,4 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CREATURE_4C69F }}'
           channelId: live
-          projectId: creature-4c69f
+          projectId: creature-game

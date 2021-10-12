@@ -25,11 +25,11 @@ contract('Creature Token', ([account, investor]) => {
 
     it('has uri', async () => {
       result = await token.uri(0)
-      assert.equal(result, "https://creature-4c69f.web.app/json/{id}.json")
+      assert.equal(result, "https://creature-game.web.app/json/{id}.json")
     })
     it('has contract uri', async () => {
       result = await token.contractURI()
-      assert.equal(result, "https://creature-4c69f.web.app/json/contract.json")
+      assert.equal(result, "https://creature-game.web.app/json/contract.json")
     })
     it('has deployer', async () => {
       result = await token.deployer()

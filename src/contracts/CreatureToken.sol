@@ -13,7 +13,7 @@ contract CreatureToken is ERC1155Burnable {
     uint256 public reviewCount = 0;
     bool public active=true;
     string public contractUri =
-        "https://creature-4c69f.web.app/json/contract.json";
+        "https://creature-game.web.app/json/contract.json";
 
     modifier onlyOwner() {
         require(msg.sender == deployer, "You are not the deployer");
@@ -22,7 +22,7 @@ contract CreatureToken is ERC1155Burnable {
 
     constructor()
         public
-        ERC1155("https://creature-4c69f.web.app/json/{id}.json")
+        ERC1155("https://creature-game.web.app/json/{id}.json")
     {
         deployer = msg.sender;
     }
