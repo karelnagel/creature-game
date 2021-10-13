@@ -64,14 +64,16 @@ class Helper {
         }
     }
 
-    async getAddressAndEns() {
+    async getAddressAndEns(getEns=false) {
         const [account] = await window.ethereum.request({ method: 'eth_accounts' });
         let ens = ''
 
         //Getting ENS
+        if (getEns){
         var provider = new ethers.providers.Web3Provider(window.ethereum);
         if (provider)
             ens = await provider.lookupAddress(account)
+        }
         return [account, ens]
     }
 }

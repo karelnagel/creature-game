@@ -10,7 +10,7 @@ module.exports = {
       port: 7545,
       network_id: "*" // Match any network id
     },
-    matic: {
+    mumbai: {
       provider: () => new HDWalletProvider(mnemonic, `https://polygon-mumbai.infura.io/v3/${projectId}`),
       network_id: 80001,
       confirmations: 2,
@@ -36,7 +36,13 @@ module.exports = {
       timeoutBlocks: 200,
       skipDryRun: true
     },
-    
+    polygon: {
+      provider: () => new HDWalletProvider(mnemonic, `https://polygon-mainnet.infura.io/v3/${projectId}`),
+      network_id: 137,
+      confirmations: 3,
+      timeoutBlocks: 200,
+      skipDryRun: true
+  }
 
   },
   contracts_directory: './src/contracts/',

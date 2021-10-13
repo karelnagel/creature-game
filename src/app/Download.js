@@ -126,8 +126,8 @@ fs.writeFileSync(`src/app/tokens.json`, data);
 
 //Write special NFT
 let special = {
-    name: 'Special NFT',
-    description: 'This is the one you want to hold',
+    name: 'TOMATO',
+    description: 'Congratulations you finished the game. This is the final token that may have some utility later :).',
     image: `${baseUrl}images/0.jpg`,
     external_url: baseUrl
 }
@@ -136,7 +136,7 @@ writeObject(special, '0')
 //Write contract
 let contract = {
     name: 'Creature game',
-    description: `Find all creatures to get one special token.\nMade by http://twitter.com/KarelETH \nGo play ${baseUrl}`,
+    description: `Collect all creatures to get the TOMATO NFT.\nMade by http://twitter.com/KarelETH \nGo play ${baseUrl}`,
     external_link: baseUrl,
     image: `${baseUrl}images/0.jpg`,
     banner_image: `${baseUrl}images/contract_banner.jpg`,

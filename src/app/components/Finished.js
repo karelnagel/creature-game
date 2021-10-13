@@ -6,7 +6,9 @@ class Finished extends Component {
       <section>
         <h2>Congratulations you collected them all!!!</h2>
         <div className="finished">
+          <a href="https://opensea.io/assets/matic/0x3eb45bdabe55602f3eb1e71c94ec641b6fe26a3e/0" target="_blank" rel="noopener noreferrer">
           <img src={require(`../images/0.jpg`)} alt="" />
+          </a>
           {(this.props.canReview || this.props.canBurn) &&
             <div>
               {this.props.canReview &&

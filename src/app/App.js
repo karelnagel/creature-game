@@ -12,8 +12,7 @@ import Helper from './components/Helper'
 
 
 class App extends Component {
-  //helper = new Helpers('0x89', 'https://polygon-rpc.com');
-  helper = new Helper('0x5', 'https://goerli.prylabs.net')
+  helper = new Helper('0x89', 'https://polygon-rpc.com');
 
   async componentWillMount() {
     await this.helper.loadWeb3()
@@ -35,9 +34,9 @@ class App extends Component {
     //For everyone
     var tokensJson = require(`./tokens.json`)
     const tokens =tokensJson.map((token,i)=>{
-      return {id:(i+1).toString(), name:token.name}
+      return {id:(i+1), name:token.name}
     })
-    console.log(tokens)
+
     let reviews = [];
     let reviewCount = await token.methods.reviewCount().call()
     for (let i = 0; i < reviewCount; i++) {
@@ -54,13 +53,19 @@ class App extends Component {
     let playWithMinting = true;
 
     [account, ens] = await this.helper.getAddressAndEns();
-
+    let allTokensIds=[]
+    let accounts=[]
     for (let i = 1; i <= maxBalance; i++) {
-      let result = await token.methods.balanceOf(account, i).call()
-      if (result.toString() === '1') {
-        tokensOwned.push(i.toString())
-      }
+      allTokensIds.push(i)
+      accounts.push(account)
     }
+    let result = await token.methods.balanceOfBatch(accounts,allTokensIds).call()
+    allTokensIds.forEach((token,i)=>{
+      let balance = result[i].toString()
+      if (balance!=='0') tokensOwned.push(token);
+    })
+    console.log('sadf',tokensOwned)
+
     if (tokensOwned.length > 0)
       showStart = false;
     let finalToken = await token.methods.balanceOf(account, 0).call()
@@ -83,7 +88,7 @@ class App extends Component {
         if (this.state.playWithMinting)
           await this.mint(id)
         else {
-          this.state.tokensOwned.push(id.toString())
+          this.state.tokensOwned.push(id)
 
           if (this.state.tokensOwned.length.toString() === this.state.maxBalance.toString()) {
             this.setState({ finished: true })
@@ -105,7 +110,7 @@ class App extends Component {
       .send({ from: this.state.account })
       .on('transactionHash', (hash) => {
 
-        this.state.tokensOwned.push(id.toString())
+        this.state.tokensOwned.push(id)
 
         //Check if finished
         if (this.state.tokensOwned.length.toString() === this.state.maxBalance.toString()) {
@@ -247,7 +252,7 @@ class App extends Component {
           </div>
         </div>
         <footer>
-          <a href="https://twitter.com/KarelETH" target="_blank" rel="noopener noreferrer">
+          <a href="https://opensea.io/collection/creature-game" target="_blank" rel="noopener noreferrer">
             <p>Opensea</p>
           </a>
           <a href="https://github.com/karelnagel/creature-game" target="_blank" rel="noopener noreferrer">
@@ -256,7 +261,7 @@ class App extends Component {
           <a href="https://twitter.com/KarelETH" target="_blank" rel="noopener noreferrer">
             <p>Twitter</p>
           </a>
-          <a href="https://twitter.com/KarelETH" target="_blank" rel="noopener noreferrer">
+          <a href="https://polygonscan.com/address/0x3eb45bdabe55602f3eb1e71c94ec641b6fe26a3e" target="_blank" rel="noopener noreferrer">
             <p>Contract</p>
           </a>
         </footer>
